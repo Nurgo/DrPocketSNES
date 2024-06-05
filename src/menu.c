@@ -1628,32 +1628,39 @@ void SNESOptionsUpdateText(int menu_index)
 		case SNES_MENU_RETURN:
 			sprintf(menutext[SNES_MENU_RETURN],"Back");
 			break;
-#if defined(__GP2X__) || defined(__WIZ__) || defined(__PANDORA__) || defined(__MIYOO__)
 		case SNES_MENU_RENDER_MODE:
 			switch(snesMenuOptions.renderMode)
 			{
 				case RENDER_MODE_UNSCALED:
-					sprintf(menutext[SNES_MENU_RENDER_MODE],"Render Mode: Unscaled");
+					sprintf(menutext[SNES_MENU_RENDER_MODE],"Scaling: Unscaled");
 					break;
+#if defined(__GP2X__) || defined(__WIZ__) || defined(__PANDORA__)
 				case RENDER_MODE_SCALED:
-					sprintf(menutext[SNES_MENU_RENDER_MODE],"Render Mode: Scaled");
+					sprintf(menutext[SNES_MENU_RENDER_MODE],"Scaling: Fullscreen");
 					break;
 				case RENDER_MODE_HORIZONTAL_SCALED:
-					sprintf(menutext[SNES_MENU_RENDER_MODE],"Render Mode: Horizontal Scaled");
+					sprintf(menutext[SNES_MENU_RENDER_MODE],"Scaling: Horizontal");
 					break;
-#if defined(__MIYOO__)
+#elif defined(__MIYOO__)
+				case RENDER_MODE_SCALED:
+					sprintf(menutext[SNES_MENU_RENDER_MODE],"Scaling: Fullscreen (smooth)");
+					break;
+				case RENDER_MODE_HORIZONTAL_SCALED:
+					sprintf(menutext[SNES_MENU_RENDER_MODE],"Scaling: Horizontal (smooth)");
+					break;
 				case RENDER_MODE_SCALED_FAST:
-					sprintf(menutext[SNES_MENU_RENDER_MODE],"Render Mode: Scaled (fast)");
+					sprintf(menutext[SNES_MENU_RENDER_MODE],"Scaling: Fullscreen");
 					break;
 				case RENDER_MODE_HORIZONTAL_SCALED_FAST:
-					sprintf(menutext[SNES_MENU_RENDER_MODE],"Render Mode: Horizontal Scaled (fast)");
+					sprintf(menutext[SNES_MENU_RENDER_MODE],"Scaling: Horizontal ");
 					break;
 #endif
 				default:
-					sprintf(menutext[SNES_MENU_RENDER_MODE],"Render Mode: Unscaled");
+					sprintf(menutext[SNES_MENU_RENDER_MODE],"Scaling: Unscaled");
 					break;
 			}
 			break;
+#if defined(__GP2X__) || defined(__WIZ__) || defined(__PANDORA__) || defined(__MIYOO__)
 		case SNES_MENU_ACTION_BUTTONS:
 			switch(snesMenuOptions.actionButtons)
 			{
@@ -2150,7 +2157,7 @@ int SNESOptionsMenu(void)
 					snesMenuOptions.transparency^=1;
 					SNESOptionsUpdateText(SNES_MENU_TRANSPARENCY);
 					break;
-#if defined(__GP2X__) || defined(__WIZ__) || defined(__PANDORA__)
+#if defined(__GP2X__) || defined(__WIZ__) || defined(__PANDORA__) || defined(__MIYOO__)
 				case SNES_MENU_RENDER_MODE:
 					if (Inp.held[INP_BUTTON_RIGHT]==1||Inp.repeat[INP_BUTTON_RIGHT])
 					{
@@ -2163,23 +2170,6 @@ int SNESOptionsMenu(void)
 						snesMenuOptions.renderMode--;
 						if (snesMenuOptions.renderMode > RENDER_MODE_HORIZONTAL_SCALED)
 							snesMenuOptions.renderMode = RENDER_MODE_HORIZONTAL_SCALED;
-					}
-					SNESOptionsUpdateText(SNES_MENU_RENDER_MODE);
-					break;
-#endif
-#if defined(__MIYOO__)
-				case SNES_MENU_RENDER_MODE:
-					if (Inp.held[INP_BUTTON_RIGHT]==1||Inp.repeat[INP_BUTTON_RIGHT])
-					{
-						snesMenuOptions.renderMode++;
-						if (snesMenuOptions.renderMode > RENDER_MODE_HORIZONTAL_SCALED_FAST)
-							snesMenuOptions.renderMode = RENDER_MODE_UNSCALED;
-					}
-					else
-					{
-						snesMenuOptions.renderMode--;
-						if (snesMenuOptions.renderMode > RENDER_MODE_HORIZONTAL_SCALED_FAST)
-							snesMenuOptions.renderMode = RENDER_MODE_HORIZONTAL_SCALED_FAST;
 					}
 					SNESOptionsUpdateText(SNES_MENU_RENDER_MODE);
 					break;
