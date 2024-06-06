@@ -646,6 +646,9 @@ void gp_Reset(void)
 #define Weight3_1(A, B)   (Half(A) + Quarter(A) + Quarter(B) + Corr3_1(A, B))
 #define Weight1_1(A, B)   (Half(A) + Half(B) + Corr1_1(A, B))
 
+// Old scaling macro
+#define COLORMIX(a, b) ( ((((a & 0xF81F) + (b & 0xF81F)) >> 1) & 0xF81F) | ((((a & 0x07E0) + (b & 0x07E0)) >> 1) & 0x07E0) )
+
 // Line scaling macros
 #define ScaleLineFast(Target, Source) \
 	do { \
@@ -832,7 +835,7 @@ void gp_video_RGB_setscaling(int W, int H)
 			pTarget += 320;
 		}
 	}
-	else
+	else // H == 239
 	{
 		for (unsigned short y = H; y != 0; y--)
 		{
@@ -919,12 +922,12 @@ void gp_video_RGB_setscaling_fast(int W, int H)
 			pTarget += 320;
 		}
 	}
-	else
+	else // H == 239
 	{
 		for (unsigned short y = H; y != 0; y--)
 		{
 			pSource += 32;
-			ScaleLineSlow(pTarget, pSource);
+			ScaleLineFast(pTarget, pSource);
 			pSource += 256 + 32;
 			pTarget += 320;
 		}
@@ -944,7 +947,7 @@ void gp_video_RGB_setHZscaling(int W, int H)
 		pTarget += 2560;
 	}
 	for (y = H; y != 0; y--)
-	{
+	{ // 239 || 224
 		pSource += 32;
 		ScaleLineSlow(pTarget,pSource);
 		pSource += 256 + 32;
@@ -965,7 +968,7 @@ void gp_video_RGB_setHZscaling_fast(int W, int H)
 		pTarget += 2560;
 	}
 	for (y = H; y != 0; y--)
-	{
+	{ // 239 || 224
 		pSource += 32;
 		ScaleLineFast(pTarget,pSource);
 		pSource += 256 + 32;
